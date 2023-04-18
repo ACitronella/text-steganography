@@ -21,7 +21,7 @@ def write_right_most_bits(arr:npt.NDArray, bitstring:str, write_pos_offset:int=0
     bits_length = min(len(arr), len(bitstring))
     for bs_idx, arr_idx in zip(range(bits_length), range(write_pos_offset, write_pos_offset+bits_length)):
         if bitstring[bs_idx] == "1":
-            arr[arr_idx] = arr[arr_idx] if (arr[arr_idx]%2 == 1) else arr[arr_idx] + 1
+            arr[arr_idx] = arr[arr_idx] if (arr[arr_idx]&1 == 1) else (arr[arr_idx]^1)
         else:
             arr[arr_idx] = arr[arr_idx] & 0xFE
     return arr
@@ -65,7 +65,7 @@ def unmerge(img_path:str):
     img_pil.close()
     img = img.reshape(-1)
     
-    bimg = img % 2 # extract the right most bit
+    bimg = img & 1 # extract the right most bit
     bin_size = bitlist_to_int(bimg[:64])
     text_size = bin_size//8
     bimg = bimg[64:bimg.shape[0] - (bimg.shape[0]%8)] # exclude first 64 bits and last remainder bits
